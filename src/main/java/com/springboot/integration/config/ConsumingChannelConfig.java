@@ -1,5 +1,6 @@
 package com.springboot.integration.config;
 
+import com.springboot.integration.customserdes.CustomDeserializer;
 import com.springboot.integration.domain.Employee;
 import com.springboot.integration.handlers.CountDownLatchHandler;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
@@ -65,7 +66,7 @@ public class ConsumingChannelConfig {
         Map<String, Object> properties = new HashMap<>();
         properties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         properties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-        properties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+        properties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, CustomDeserializer.class);
         properties.put(ConsumerConfig.GROUP_ID_CONFIG, "spring-integration");
         // automatically reset the offset to the earliest offset
         properties.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");

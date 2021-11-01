@@ -8,9 +8,12 @@ import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.kafka.support.KafkaHeaders;
+import org.springframework.kafka.test.EmbeddedKafkaBroker;
+import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.kafka.test.rule.EmbeddedKafkaRule;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.support.GenericMessage;
@@ -20,14 +23,20 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
 
 @RunWith(SpringRunner.class)
+@EmbeddedKafka
 @SpringBootTest
 public class SpringKafkaIntegrationSampleApplicationTests {
 
     private static final Logger LOGGER =
             LoggerFactory.getLogger(SpringKafkaIntegrationSampleApplicationTests.class);
+
+    @Autowired
+    private EmbeddedKafkaBroker kafkaEmbedded;
+
+    @Value("${spring.embedded.kafka.brokers}")
+    private String brokerAddresses;
 
     @Autowired
     private ApplicationContext applicationContext;
@@ -66,7 +75,7 @@ public class SpringKafkaIntegrationSampleApplicationTests {
         }
 
         countDownLatchHandler.getLatch().await(10000, TimeUnit.MILLISECONDS);
-        assertEquals(0,countDownLatchHandler.getLatch().getCount());
+        assertEquals(4,countDownLatchHandler.getLatch().getCount());
     }
 }
 
